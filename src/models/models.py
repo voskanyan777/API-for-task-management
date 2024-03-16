@@ -4,6 +4,7 @@ from sqlalchemy import String, text, JSON, UniqueConstraint
 from sqlalchemy.orm import Mapped, DeclarativeBase, mapped_column
 
 intpk = Annotated[int, mapped_column(primary_key=True)]
+task_short_name = Annotated[str, mapped_column(String(90), nullable=False)]
 
 
 # Базовый класс
@@ -26,7 +27,7 @@ class User(Base):
 class Task(Base):
     __tablename__ = 'tasks'
     id: Mapped[intpk]
-    short_name: Mapped[str] = mapped_column(String(90), nullable=False)
+    short_name: Mapped[task_short_name]
     description: Mapped[str]
     started_in: Mapped[datetime]
     completed_in: Mapped[datetime]
@@ -37,7 +38,7 @@ class Task(Base):
 class CompletedTask(Base):
     __tablename__ = 'completed_tasks'
     id: Mapped[intpk]
-    short_name: Mapped[str] = mapped_column(String(90), nullable=False)
+    short_name: Mapped[task_short_name]
     description: Mapped[str]
     started_in: Mapped[datetime]
     completed_in: Mapped[datetime]
