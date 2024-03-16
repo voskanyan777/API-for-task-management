@@ -17,9 +17,18 @@ async def get_tasks(user_id: int) -> dict:
         'data': result
     }
 
+
 @task_router.post('/add_task')
 async def add_user_task(task: TaskModel):
     syncOrm.insert_tasks(**task.dict())
+    return {
+        'data': None,
+        'status': 'ok'
+    }
+
+@task_router.put('/update_task')
+async def update_task():
+    syncOrm.update_task()
     return {
         'data': None,
         'status': 'ok'

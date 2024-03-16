@@ -1,4 +1,4 @@
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, update
 from src.db.database import session_factory, sync_engine
 from ..models.models import Task, Base, User
 
@@ -46,3 +46,15 @@ class SyncOrm():
         with session_factory() as session:
             session.add_all([task])
             session.commit()
+
+    @staticmethod
+    def update_task():
+        with session_factory() as session:
+            session.execute(
+                update(Task)
+                .where((Task.user_id == 2) & (Task.short_name == 'create account'))
+                .values(description='test')
+            )
+            session.commit()
+
+
