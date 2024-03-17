@@ -52,7 +52,7 @@ class SyncOrm():
     @staticmethod
     def update_task(user_id, task_id, short_name, description, started_in, completed_in, deadline):
         with session_factory() as session:
-            session.query(Task).filter_by(task_id = task_id).delete()
+            session.query(Task).filter_by(task_id=task_id).delete()
             session.commit()
 
             task = Task(
@@ -67,3 +67,8 @@ class SyncOrm():
             session.add_all([task])
             session.commit()
 
+    @staticmethod
+    def delete_task(task_id):
+        with session_factory() as session:
+            session.query(Task).filter_by(task_id=task_id).delete()
+            session.commit()

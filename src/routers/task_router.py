@@ -14,7 +14,8 @@ syncOrm = SyncOrm()
 async def get_tasks(user_id: int) -> dict:
     result = syncOrm.select_tasks(user_id)
     return {
-        'data': result
+        'data': result,
+        'status': 'ok'
     }
 
 
@@ -30,6 +31,15 @@ async def add_user_task(task: TaskModel):
 @task_router.put('/update_task')
 async def update_task(task: TaskModel):
     syncOrm.update_task(**task.dict())
+    return {
+        'data': None,
+        'status': 'ok'
+    }
+
+
+@task_router.delete('/delete_task/{task_id}')
+async def delete_task(task_id: str):
+    syncOrm.delete_task(task_id)
     return {
         'data': None,
         'status': 'ok'
