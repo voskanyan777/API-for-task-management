@@ -26,9 +26,10 @@ async def add_user_task(task: TaskModel):
         'status': 'ok'
     }
 
+
 @task_router.put('/update_task')
-async def update_task():
-    syncOrm.update_task()
+async def update_task(task: TaskModel):
+    syncOrm.update_task(**task.dict())
     return {
         'data': None,
         'status': 'ok'

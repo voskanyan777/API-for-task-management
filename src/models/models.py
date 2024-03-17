@@ -28,6 +28,7 @@ class Task(Base):
     __tablename__ = 'tasks'
     id: Mapped[intpk]
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    task_id: Mapped[str] = mapped_column(nullable=False)
     short_name: Mapped[task_short_name]
     description: Mapped[str]
     started_in: Mapped[datetime]

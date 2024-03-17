@@ -48,7 +48,7 @@ class SyncOrm():
             session.commit()
 
     @staticmethod
-    def update_task():
+    def update_task(user_id, short_name, description, started_in, completed_in, deadline):
         with session_factory() as session:
             session.execute(
                 update(Task)
