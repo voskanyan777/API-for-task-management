@@ -44,6 +44,7 @@ class SyncOrm():
             completed_in=completed_in,
             deadline=deadline
         )
+
         with session_factory() as session:
             session.add_all([task])
             session.commit()
@@ -54,4 +55,15 @@ class SyncOrm():
             session.query(Task).filter_by(task_id = task_id).delete()
             session.commit()
 
+            task = Task(
+                user_id=user_id,
+                task_id=task_id,
+                short_name=short_name,
+                description=description,
+                started_in=started_in,
+                completed_in=completed_in,
+                deadline=deadline
+            )
+            session.add_all([task])
+            session.commit()
 
