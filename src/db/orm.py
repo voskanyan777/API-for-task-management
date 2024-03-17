@@ -49,13 +49,9 @@ class SyncOrm():
             session.commit()
 
     @staticmethod
-    def update_task(user_id, short_name, description, started_in, completed_in, deadline):
+    def update_task(user_id, task_id, short_name, description, started_in, completed_in, deadline):
         with session_factory() as session:
-            session.execute(
-                update(Task)
-                .where((Task.user_id == 2) & (Task.short_name == 'create account'))
-                .values(description='test')
-            )
+            session.query(Task).filter_by(task_id = task_id).delete()
             session.commit()
 
 
