@@ -1,3 +1,4 @@
+from enum import Enum
 from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, Field
@@ -11,4 +12,3 @@ class TaskModel(BaseModel):
     started_in: datetime
     completed_in: datetime
     deadline: datetime
-

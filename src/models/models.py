@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Annotated
-from sqlalchemy import String, text, JSON, UniqueConstraint, ForeignKey
+from sqlalchemy import String, text, JSON, UniqueConstraint, ForeignKey, CheckConstraint
 from sqlalchemy.orm import Mapped, DeclarativeBase, mapped_column
 
 intpk = Annotated[int, mapped_column(primary_key=True)]
@@ -40,6 +40,8 @@ class Task(Base):
 class CompletedTask(Base):
     __tablename__ = 'completed_tasks'
     id: Mapped[intpk]
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    task_id: Mapped[str] = mapped_column(nullable=False)
     short_name: Mapped[task_short_name]
     description: Mapped[str]
     started_in: Mapped[datetime]
