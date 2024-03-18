@@ -48,8 +48,8 @@ async def delete_task(task_id: str):
 
 @task_router.get('/completing_tasks/{task_id}')
 async def completing_tasks(task_id: str):
-    result = syncOrm.completing_tasks(task_id)
+    syncOrm.completing_tasks(task_id)
     return {
-        'data': result,
+        'data': None,
         'status': 'ok'
     }

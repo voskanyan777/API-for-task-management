@@ -1,6 +1,6 @@
 from sqlalchemy import select, insert, update
 from src.db.database import session_factory, sync_engine
-from ..models.models import Task, Base, User
+from ..models.models import Task, Base, User, CompletedTask
 
 
 class SyncOrm():
@@ -64,6 +64,7 @@ class SyncOrm():
                 completed_in=completed_in,
                 deadline=deadline
             )
+
             session.add_all([task])
             session.commit()
 
@@ -77,5 +78,18 @@ class SyncOrm():
     def completing_tasks(task_id):
         with session_factory() as session:
             query = select(Task).where(Task.task_id == task_id)
-            result = session.execute(query).scalars().all()
+            result = session.execute(query).scalars().all()[0]
+            session.query(Task).filter_by(task_id=task_id).delete()
+            session.commit()
 
+            task = CompletedTask(
+                user_id=result.user_id,
+                task_id=result.task_id,
+                short_name=result.short_name,
+                description=result.description,
+                started_in=result.started_in,
+                completed_in=result.completed_in,
+                deadline=result.deadline
+            )
+            session.add_all([task])
+            session.commit()
