@@ -72,3 +72,10 @@ class SyncOrm():
         with session_factory() as session:
             session.query(Task).filter_by(task_id=task_id).delete()
             session.commit()
+
+    @staticmethod
+    def completing_tasks(task_id):
+        with session_factory() as session:
+            query = select(Task).where(Task.task_id == task_id)
+            result = session.execute(query).scalars().all()
+
