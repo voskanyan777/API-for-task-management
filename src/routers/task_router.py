@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from src.db.orm import SyncOrm
-from src.models.task_model import TaskModel
+from ..db.orm import SyncOrm
+from ..models.task_model import TaskModel
 
 task_router = APIRouter(
     prefix='/task',

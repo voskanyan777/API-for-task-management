@@ -14,5 +14,3 @@ async def start_server():
     Base.metadata.create_all(sync_engine)
 
 
-if __name__ == '__main__':
-    uvicorn.run(app, port=8001)

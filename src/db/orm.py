@@ -1,5 +1,5 @@
 from sqlalchemy import select, insert, update
-from src.db.database import session_factory, sync_engine
+from database import session_factory, sync_engine
 from ..models.models import Task, Base, User, CompletedTask
 
 
