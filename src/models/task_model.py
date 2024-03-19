@@ -11,3 +11,4 @@ class TaskModel(BaseModel):
     started_in: datetime | None = None
     completed_in: datetime | None = None
     deadline: datetime | None = None
+    nested_tasks: dict[str, str] | None = None

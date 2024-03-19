@@ -34,7 +34,7 @@ class SyncOrm():
             return formatted_result
 
     @staticmethod
-    def insert_tasks(user_id, task_id, short_name, description=None, started_in=None, completed_in=None, deadline=None):
+    def insert_tasks(user_id, task_id, short_name, description=None, started_in=None, completed_in=None, deadline=None, nested_tasks=None):
         task = Task(
             user_id=user_id,
             task_id=task_id,
@@ -42,7 +42,8 @@ class SyncOrm():
             description=description,
             started_in=started_in,
             completed_in=completed_in,
-            deadline=deadline
+            deadline=deadline,
+            nested_tasks=nested_tasks
         )
 
         with session_factory() as session:
