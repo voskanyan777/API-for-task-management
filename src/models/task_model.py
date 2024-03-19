@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class TaskModel(BaseModel):
-    user_id: Annotated[int, Field(ge=1)]
+    user_id: Annotated[int, Field(gt=5)]
     task_id: str
     short_name: str
     description: str | None = None

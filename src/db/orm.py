@@ -1,4 +1,4 @@
-from sqlalchemy import select, insert, update
+from sqlalchemy import select
 from .database import session_factory, sync_engine
 from src.models.models import Task, Base, User, CompletedTask
 
@@ -20,7 +20,7 @@ class SyncOrm():
                                                                                                   User.id == Task.user_id).where(
                 Task.user_id == user_id)
             result = session.execute(query).all()
-
+            print(type(result))
             # Создание списка словарей из результатов
             formatted_result = []
             for row in result:
@@ -34,7 +34,8 @@ class SyncOrm():
             return formatted_result
 
     @staticmethod
-    def insert_tasks(user_id, task_id, short_name, description=None, started_in=None, completed_in=None, deadline=None, nested_tasks=None):
+    def insert_tasks(user_id, task_id, short_name, description=None, started_in=None, completed_in=None, deadline=None,
+                     nested_tasks=None):
         task = Task(
             user_id=user_id,
             task_id=task_id,
