@@ -69,17 +69,17 @@ class SyncOrm():
             session.commit()
 
     @staticmethod
-    def delete_task(task_id):
+    def delete_task(user_id, task_id):
         with session_factory() as session:
-            session.query(Task).filter_by(task_id=task_id).delete()
+            session.query(Task).filter_by(task_id=task_id, user_id=user_id).delete()
             session.commit()
 
     @staticmethod
-    def completing_tasks(task_id):
+    def completing_tasks(user_id, task_id):
         with session_factory() as session:
             query = select(Task).where(Task.task_id == task_id)
             result = session.execute(query).scalars().all()[0]
-            session.query(Task).filter_by(task_id=task_id).delete()
+            session.query(Task).filter_by(task_id=task_id, user_id=user_id).delete()
             session.commit()
 
             task = CompletedTask(

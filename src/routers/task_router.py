@@ -33,6 +33,7 @@ async def add_user_task(task: TaskModel):
             detail='Задача с таким task_id уже существует'
         )
 
+
 @task_router.put('/update_task')
 async def update_task(task: TaskModel):
     syncOrm.update_task(**task.dict())
@@ -42,18 +43,18 @@ async def update_task(task: TaskModel):
     }
 
 
-@task_router.delete('/delete_task/{task_id}')
-async def delete_task(task_id: str):
-    syncOrm.delete_task(task_id)
+@task_router.delete('/delete_task/{user_id}/{task_id}')
+async def delete_task(user_id: int, task_id: str):
+    syncOrm.delete_task(user_id, task_id)
     return {
         'data': None,
         'status': 'ok'
     }
 
 
-@task_router.get('/completing_tasks/{task_id}')
-async def completing_tasks(task_id: str):
-    syncOrm.completing_tasks(task_id)
+@task_router.get('/completing_tasks/{user_id}/{task_id}')
+async def completing_tasks(user_id: int, task_id: str):
+    syncOrm.completing_tasks(user_id, task_id)
     return {
         'data': None,
         'status': 'ok'
