@@ -15,7 +15,7 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'users'
     __table_args__ = (
-        (UniqueConstraint('user_email'), )
+        (UniqueConstraint('user_email'),)
     )
     id: Mapped[intpk]
     user_name: Mapped[str] = mapped_column(String(40), nullable=False)
@@ -30,21 +30,21 @@ class Task(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     task_id: Mapped[str] = mapped_column(nullable=False)
     short_name: Mapped[task_short_name]
-    description: Mapped[str]
-    started_in: Mapped[datetime]
-    completed_in: Mapped[datetime]
-    deadline: Mapped[datetime]
+    description: Mapped[str] = mapped_column(nullable=True)
+    started_in: Mapped[datetime] = mapped_column(nullable=True)
+    completed_in: Mapped[datetime] = mapped_column(nullable=True)
+    deadline: Mapped[datetime] = mapped_column(nullable=True)
     nested_tasks = mapped_column(JSON)
 
 
 class CompletedTask(Base):
     __tablename__ = 'completed_tasks'
     id: Mapped[intpk]
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     task_id: Mapped[str] = mapped_column(nullable=False)
     short_name: Mapped[task_short_name]
-    description: Mapped[str]
-    started_in: Mapped[datetime]
-    completed_in: Mapped[datetime]
-    deadline: Mapped[datetime]
+    description: Mapped[str] = mapped_column(nullable=True)
+    started_in: Mapped[datetime] = mapped_column(nullable=True)
+    completed_in: Mapped[datetime] = mapped_column(nullable=True)
+    deadline: Mapped[datetime] = mapped_column(nullable=True)
     nested_tasks = mapped_column(JSON)
