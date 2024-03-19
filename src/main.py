@@ -1,21 +1,25 @@
+import asyncio
 import uvicorn
 from fastapi import FastAPI
-from models.models import Base
-from src.db.orm import SyncOrm
-from db.database import sync_engine
+from src.db.async_orm import AsyncOrm
 from routers.task_router import task_router
 
 app = FastAPI()
 app.include_router(task_router)
 
-syncOrm = SyncOrm()
+asyncOrm = AsyncOrm()
 
 
-@app.on_event('startup')
-async def start_server():
-    # Base.metadata.drop_all(sync_engine)
-    Base.metadata.create_all(sync_engine)
+async def main() -> None:
+    await asyncOrm.drop_tables()
+    await asyncOrm.create_tables()
 
+
+# @app.on_event('startup')
+# async def start_server():
+#     await asyncOrm.drop_tables()
+#     await asyncOrm.create_tables()
+#
 
 if __name__ == '__main__':
-    uvicorn.run(app, port=8002)
+    asyncio.run(main())
