@@ -34,7 +34,7 @@ class SyncOrm():
             return formatted_result
 
     @staticmethod
-    def insert_tasks(user_id, task_id, short_name, description, started_in, completed_in, deadline):
+    def insert_tasks(user_id, task_id, short_name, description=None, started_in=None, completed_in=None, deadline=None):
         task = Task(
             user_id=user_id,
             task_id=task_id,

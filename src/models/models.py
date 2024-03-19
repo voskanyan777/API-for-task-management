@@ -26,6 +26,9 @@ class User(Base):
 
 class Task(Base):
     __tablename__ = 'tasks'
+    __table_args__ = (
+        UniqueConstraint('user_id', 'task_id', name='unique_user_task_id'),
+    )
     id: Mapped[intpk]
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     task_id: Mapped[str] = mapped_column(nullable=False)

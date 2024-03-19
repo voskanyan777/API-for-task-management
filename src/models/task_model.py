@@ -7,7 +7,7 @@ class TaskModel(BaseModel):
     user_id: Annotated[int, Field(ge=1)]
     task_id: str
     short_name: str
-    description: str
-    started_in: datetime
-    completed_in: datetime
-    deadline: datetime
+    description: str | None = None
+    started_in: datetime | None = None
+    completed_in: datetime | None = None
+    deadline: datetime | None = None
