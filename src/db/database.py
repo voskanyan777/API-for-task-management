@@ -4,12 +4,12 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from src.config import settings
 
 sync_engine = create_engine(
-    url=settings.DATABASE_URL_psycopg,
+    url=settings.DATABASE_URL_asyncpg,
     echo=True,  # Логирование
 )
 
 async_engine = create_async_engine(
-    url=settings.DATABASE_URL_psycopg,
+    url=settings.DATABASE_URL_asyncpg,
     echo=True
 )
 
