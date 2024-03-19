@@ -1,6 +1,6 @@
 from sqlalchemy import select, insert, update
-from database import session_factory, sync_engine
-from ..models.models import Task, Base, User, CompletedTask
+from .database import session_factory, sync_engine
+from src.models.models import Task, Base, User, CompletedTask
 
 
 class SyncOrm():

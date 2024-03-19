@@ -1,6 +1,6 @@
-from fastapi import APIRouter
-from ..db.orm import SyncOrm
-from ..models.task_model import TaskModel
+from fastapi import APIRouter, HTTPException, status
+from src.db.orm import SyncOrm
+from src.models.task_model import TaskModel
 
 task_router = APIRouter(
     prefix='/task',
@@ -21,12 +21,17 @@ async def get_tasks(user_id: int) -> dict:
 
 @task_router.post('/add_task')
 async def add_user_task(task: TaskModel):
-    syncOrm.insert_tasks(**task.dict())
-    return {
-        'data': None,
-        'status': 'ok'
-    }
-
+    try:
+        syncOrm.insert_tasks(**task.dict())
+        return {
+            'data': None,
+            'status': 'ok'
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Задача с таким task_id уже существует'
+        )
 
 @task_router.put('/update_task')
 async def update_task(task: TaskModel):
