@@ -4,11 +4,14 @@ from .schemas import UserSchema
 from .utils import *
 from pydantic import BaseModel
 import uvicorn
+from src.db.orm import SyncOrm
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, OAuth2PasswordBearer
 
 http_bearer = HTTPBearer()
 
 oauth2_scheme = OAuth2PasswordBearer('/token')
+
+sync_orm = SyncOrm()
 
 
 class Token(BaseModel):
@@ -26,20 +29,20 @@ users_db: dict[str, UserSchema] = {
 }
 
 router = APIRouter(
-    prefix='/jwt',
+    prefix='/jwt/auth',
     tags=['jwt']
 )
 
 
 def validate_auth_user(
-        username: str = Form(),
+        email: str = Form(),
         password: str = Form(),
 ):
     unauthed_exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="invalid username or password",
     )
-    if not (user := users_db.get(username)):
+    if not (user := users_db.get(email)):
         raise unauthed_exc
 
     if not validate_password(
@@ -108,6 +111,16 @@ def auth_user_check_self_info(user: UserSchema = Depends(get_current_active_auth
     return {
         'username': user.username,
         'email': user.email
+    }
+
+
+@router.post('/registration')
+def user_registration(user_name: str, user_email: str, password: str):
+    hashed_password = hash_password(password)
+    sync_orm.add_user(user_name, user_email, hashed_password)
+    return {
+        'data': None,
+        'status': 'ok'
     }
 
 

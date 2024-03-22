@@ -95,3 +95,14 @@ class SyncOrm():
             )
             session.add_all([task])
             session.commit()
+
+    @staticmethod
+    def add_user(user_name: str, user_email: str, hashed_password: str) -> None:
+        user = User(
+            user_name=user_name,
+            user_email=user_email,
+            hashed_password=hashed_password
+        )
+        with session_factory() as session:
+            session.add_all([user])
+            session.commit()
