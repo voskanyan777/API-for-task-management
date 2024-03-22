@@ -4,9 +4,12 @@ from models.models import Base
 from src.db.orm import SyncOrm
 from db.database import sync_engine
 from routers.task_router import task_router
+from src.auth.auth_jwt import router as auth_router
 
 app = FastAPI()
 app.include_router(task_router)
+app.include_router(auth_router)
+
 
 syncOrm = SyncOrm()
 
