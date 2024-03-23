@@ -20,7 +20,7 @@ class User(Base):
     id: Mapped[intpk]
     user_name: Mapped[str] = mapped_column(String(40), nullable=False)
     user_email: Mapped[str] = mapped_column(String(90), nullable=False, unique=True)
-    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    hashed_password: Mapped[bytes] = mapped_column(nullable=False)
     registered_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
 
 

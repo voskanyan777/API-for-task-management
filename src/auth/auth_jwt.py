@@ -24,8 +24,8 @@ john = UserSchema(username='john', password=hash_password('qwerty'), email='john
 sam = UserSchema(username='sam', password=hash_password('secret'), email='same@mail.ru')
 
 users_db: dict[str, UserSchema] = {
-    john.username: john,
-    sam.username: sam
+    john.email: john,
+    sam.email: sam
 }
 
 router = APIRouter(
@@ -88,8 +88,8 @@ def get_current_token_payload_user(
 
 
 def get_current_auth_user(payload: dict = Depends(get_current_token_payload_user)) -> UserSchema:
-    username: str | None = payload.get('sub')
-    if not (user := users_db.get(username)):
+    useremail: str | None = payload.get('email')
+    if not (user := users_db.get(useremail)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='token invalid (user not found)'
