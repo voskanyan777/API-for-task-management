@@ -106,3 +106,10 @@ class SyncOrm():
         with session_factory() as session:
             session.add_all([user])
             session.commit()
+
+    @staticmethod
+    def get_user(email: str) -> list:
+        with session_factory() as session:
+            query = select(User.user_name, User.hashed_password, User.user_email).where(User.user_email == email)
+            result = session.execute(query).first()
+            return result

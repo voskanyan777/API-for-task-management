@@ -42,12 +42,14 @@ def validate_auth_user(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="invalid username or password",
     )
-    if not (user := users_db.get(email)):
+    user = sync_orm.get_user(email)
+    if not user:
         raise unauthed_exc
-
+    hashed_password = user[1]
+    user = UserSchema(username=user[0], password=user[1], email=user[2])
     if not validate_password(
             password=password,
-            hashed_password=user.password,
+            hashed_password=hashed_password,
     ):
         raise unauthed_exc
 
@@ -89,11 +91,13 @@ def get_current_token_payload_user(
 
 def get_current_auth_user(payload: dict = Depends(get_current_token_payload_user)) -> UserSchema:
     useremail: str | None = payload.get('email')
-    if not (user := users_db.get(useremail)):
+    user = sync_orm.get_user(useremail)
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='token invalid (user not found)'
         )
+    user = UserSchema(username=user[0], password=user[1], email=user[2])
     return user
 
 
