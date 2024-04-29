@@ -1,2 +1,2 @@
-src/.env
+src/db/.env
 /src/auth/certs/jwt-private.pem
