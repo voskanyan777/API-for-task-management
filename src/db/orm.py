@@ -117,7 +117,17 @@ class SyncOrm():
     @staticmethod
     def get_user(email: str) -> list:
         with session_factory() as session:
-            query = select(User.user_name, User.hashed_password,
+            query = select(User.user_login, User.user_name,
                            User.user_email).where(User.user_email == email)
+            result = session.execute(query).first()
+            return result
+
+    @staticmethod
+    def get_user_auth(email: str) -> list:
+        with session_factory() as session:
+            query = select(User.user_name,
+                           User.hashed_password,
+                           User.user_email,
+                           ).where(User.user_email == email)
             result = session.execute(query).first()
             return result

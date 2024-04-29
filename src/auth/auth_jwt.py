@@ -1,7 +1,7 @@
 from jwt.exceptions import InvalidTokenError
 from fastapi import APIRouter, Depends, Form, HTTPException, status, FastAPI, \
     Form
-from .schemas import UserSchema
+from .schemas import UserSchema, UserSchemaAuth
 from .utils import *
 from pydantic import BaseModel
 import uvicorn
@@ -20,17 +20,17 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-
-john = UserSchema(username='john', password=hash_password('qwerty'),
-                  email='john@mail.ru')
-
-sam = UserSchema(username='sam', password=hash_password('secret'),
-                 email='same@mail.ru')
-
-users_db: dict[str, UserSchema] = {
-    john.email: john,
-    sam.email: sam
-}
+#
+# john = UserSchema(username='john', password=hash_password('qwerty'),
+#                   email='john@mail.ru')
+#
+# sam = UserSchema(username='sam', password=hash_password('secret'),
+#                  email='same@mail.ru')
+#
+# users_db: dict[str, UserSchema] = {
+#     john.email: john,
+#     sam.email: sam
+# }
 
 router = APIRouter(
     prefix='/jwt/auth',
@@ -46,11 +46,11 @@ def validate_auth_user(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="invalid username or password",
     )
-    user = sync_orm.get_user(email)
+    user = sync_orm.get_user_auth(email)
     if not user:
         raise unauthed_exc
     hashed_password = user[1]
-    user = UserSchema(username=user[0], password=user[1], email=user[2])
+    user = UserSchemaAuth(username=user[0], password=user[1], email=user[2])
     if not validate_password(
             password=password,
             hashed_password=hashed_password,
@@ -103,7 +103,10 @@ def get_current_auth_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='token invalid (user not found)'
         )
-    user = UserSchema(username=user[0], password=user[1], email=user[2])
+    user = UserSchema(user_login=user[0],
+                      user_name=user[1],
+                      user_email=user[2])
+
     return user
 
 
@@ -116,13 +119,17 @@ def get_current_active_auth_user(
         detail='user inactive'
     )
 
-
+# endpoint для теста
 @router.get('/users/me')
 def auth_user_check_self_info(
         user: UserSchema = Depends(get_current_active_auth_user)):
     return {
-        'username': user.username,
-        'email': user.email
+        'data': {
+            'user_login': user.user_login,
+            'user_name': user.user_name,
+            'user_email': user.user_email,
+        },
+        'status': 'ok'
     }
 
 
