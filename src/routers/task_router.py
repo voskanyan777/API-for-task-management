@@ -1,7 +1,9 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from src.db.orm import SyncOrm
 from src.models.task_model import TaskModel
 from sqlalchemy.exc import IntegrityError
+from src.auth.schemas import UserSchema
+from src.auth.auth_jwt import get_current_active_auth_user
 
 task_router = APIRouter(
     prefix='/task',
@@ -11,9 +13,10 @@ task_router = APIRouter(
 syncOrm = SyncOrm()
 
 
-@task_router.get('/get_user_tasks/{user_id}')
-async def get_tasks(user_id: int) -> dict:
-    result = syncOrm.select_tasks(user_id)
+@task_router.get('/get_user_tasks/')
+async def get_tasks(
+        user: UserSchema = Depends(get_current_active_auth_user)) -> dict:
+    result = syncOrm.select_tasks(user.username)
     return {
         'data': result,
         'status': 'ok'

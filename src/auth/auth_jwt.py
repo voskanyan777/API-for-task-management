@@ -1,11 +1,13 @@
 from jwt.exceptions import InvalidTokenError
-from fastapi import APIRouter, Depends, Form, HTTPException, status, FastAPI
+from fastapi import APIRouter, Depends, Form, HTTPException, status, FastAPI, \
+    Form
 from .schemas import UserSchema
 from .utils import *
 from pydantic import BaseModel
 import uvicorn
 from src.db.orm import SyncOrm
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, \
+    OAuth2PasswordBearer
 
 http_bearer = HTTPBearer()
 
@@ -19,9 +21,11 @@ class Token(BaseModel):
     token_type: str
 
 
-john = UserSchema(username='john', password=hash_password('qwerty'), email='john@mail.ru')
+john = UserSchema(username='john', password=hash_password('qwerty'),
+                  email='john@mail.ru')
 
-sam = UserSchema(username='sam', password=hash_password('secret'), email='same@mail.ru')
+sam = UserSchema(username='sam', password=hash_password('secret'),
+                 email='same@mail.ru')
 
 users_db: dict[str, UserSchema] = {
     john.email: john,
@@ -84,12 +88,14 @@ def get_current_token_payload_user(
     try:
         payload = decode_jwt(token=token)
     except InvalidTokenError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f'invalid token error {e}')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f'invalid token error {e}')
 
     return payload
 
 
-def get_current_auth_user(payload: dict = Depends(get_current_token_payload_user)) -> UserSchema:
+def get_current_auth_user(
+        payload: dict = Depends(get_current_token_payload_user)) -> UserSchema:
     useremail: str | None = payload.get('email')
     user = sync_orm.get_user(useremail)
     if not user:
@@ -101,7 +107,8 @@ def get_current_auth_user(payload: dict = Depends(get_current_token_payload_user
     return user
 
 
-def get_current_active_auth_user(user: UserSchema = Depends(get_current_auth_user)):
+def get_current_active_auth_user(
+        user: UserSchema = Depends(get_current_auth_user)):
     if user.active:
         return user
     raise HTTPException(
@@ -111,7 +118,8 @@ def get_current_active_auth_user(user: UserSchema = Depends(get_current_auth_use
 
 
 @router.get('/users/me')
-def auth_user_check_self_info(user: UserSchema = Depends(get_current_active_auth_user)):
+def auth_user_check_self_info(
+        user: UserSchema = Depends(get_current_active_auth_user)):
     return {
         'username': user.username,
         'email': user.email
@@ -119,9 +127,12 @@ def auth_user_check_self_info(user: UserSchema = Depends(get_current_active_auth
 
 
 @router.post('/registration')
-def user_registration(user_name: str, user_email: str, password: str):
+def user_registration(user_login: str = Form(),
+                      user_name: str = Form(),
+                      user_email: str = Form(),
+                      password: str = Form()):
     hashed_password = hash_password(password)
-    sync_orm.add_user(user_name, user_email, hashed_password)
+    sync_orm.add_user(user_name, user_email, hashed_password, user_login)
     return {
         'data': None,
         'status': 'ok'

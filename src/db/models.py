@@ -15,9 +15,11 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'users'
     __table_args__ = (
-        (UniqueConstraint('user_email'),)
+        (UniqueConstraint('user_email'),
+         UniqueConstraint('user_login'))
     )
     id: Mapped[intpk]
+    user_login: Mapped[str] = mapped_column(String(90), nullable=False)
     user_name: Mapped[str] = mapped_column(String(40), nullable=False)
     user_email: Mapped[str] = mapped_column(String(90), nullable=False, unique=True)
     hashed_password: Mapped[bytes] = mapped_column(nullable=False)
@@ -27,10 +29,11 @@ class User(Base):
 class Task(Base):
     __tablename__ = 'tasks'
     __table_args__ = (
-        UniqueConstraint('user_id', 'task_id', name='unique_user_task_id'),
+        UniqueConstraint('user_login', 'task_id', name='unique_user_task_id'),
+        UniqueConstraint('user_login')
     )
     id: Mapped[intpk]
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_login: Mapped[int] = mapped_column(ForeignKey("users.user_login"))
     task_id: Mapped[str] = mapped_column(nullable=False)
     short_name: Mapped[task_short_name]
     description: Mapped[str] = mapped_column(nullable=True)
@@ -42,8 +45,11 @@ class Task(Base):
 
 class CompletedTask(Base):
     __tablename__ = 'completed_tasks'
+    __tabel_args__ = (
+        UniqueConstraint('user_login'),
+    )
     id: Mapped[intpk]
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_login: Mapped[int] = mapped_column(ForeignKey("users.user_login"))
     task_id: Mapped[str] = mapped_column(nullable=False)
     short_name: Mapped[task_short_name]
     description: Mapped[str] = mapped_column(nullable=True)

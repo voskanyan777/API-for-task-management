@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from models.models import Base
+from src.db.models import Base
 from src.db.orm import SyncOrm
 from db.database import sync_engine
 from routers.task_router import task_router
