@@ -4,7 +4,6 @@ from pydantic import BaseModel, Field
 
 
 class TaskModel(BaseModel):
-    user_id: int
     task_id: str
     short_name: str
     description: str | None = None

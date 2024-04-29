@@ -16,7 +16,7 @@ syncOrm = SyncOrm()
 @task_router.get('/get_user_tasks/')
 async def get_tasks(
         user: UserSchema = Depends(get_current_active_auth_user)) -> dict:
-    result = syncOrm.select_tasks(user.username)
+    result = syncOrm.select_tasks(user.user_login)
     return {
         'data': result,
         'status': 'ok'
@@ -24,24 +24,22 @@ async def get_tasks(
 
 
 @task_router.post('/add_task')
-async def add_user_task(task: TaskModel):
+async def add_user_task(task: TaskModel, user: UserSchema = Depends(
+    get_current_active_auth_user)) -> dict:
+    task = task.dict()
+    task['user_login'] = user.user_login
     try:
-        syncOrm.insert_tasks(**task.dict())
-        return {
-            'data': None,
-            'status': 'ok'
-        }
+        syncOrm.insert_tasks(**task)
     except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Задача с таким task_id уже существует'
         )
-    # except Exception as e:
-    #     print(e)
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail='Задача с таким task_id уже существует'
-    #     )
+
+    return {
+        'data': None,
+        'status': 'ok'
+    }
 
 
 @task_router.put('/update_task')
