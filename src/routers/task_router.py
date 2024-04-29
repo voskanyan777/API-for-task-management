@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from src.db.orm import SyncOrm
 from src.models.task_model import TaskModel
+from sqlalchemy.exc import IntegrityError
 
 task_router = APIRouter(
     prefix='/task',
@@ -27,12 +28,17 @@ async def add_user_task(task: TaskModel):
             'data': None,
             'status': 'ok'
         }
-    except Exception as e:
-        print(e)
+    except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Задача с таким task_id уже существует'
         )
+    # except Exception as e:
+    #     print(e)
+    #     raise HTTPException(
+    #         status_code=status.HTTP_400_BAD_REQUEST,
+    #         detail='Задача с таким task_id уже существует'
+    #     )
 
 
 @task_router.put('/update_task')
