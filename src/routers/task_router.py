@@ -30,7 +30,7 @@ async def add_user_task(task: TaskModel, user: UserSchema = Depends(
     task['user_login'] = user.user_login
     try:
         syncOrm.insert_tasks(**task)
-    except IntegrityError:
+    except IntegrityError as error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Задача с таким task_id уже существует'
@@ -49,6 +49,7 @@ async def update_task(task: TaskModel):
         'data': None,
         'status': 'ok'
     }
+
 
 
 @task_router.delete('/delete_task/{user_id}/{task_id}')

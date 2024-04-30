@@ -28,10 +28,6 @@ class User(Base):
 
 class Task(Base):
     __tablename__ = 'tasks'
-    __table_args__ = (
-        UniqueConstraint('user_login', 'task_id', name='unique_user_task_id'),
-        UniqueConstraint('user_login')
-    )
     id: Mapped[intpk]
     user_login: Mapped[int] = mapped_column(ForeignKey("users.user_login"))
     task_id: Mapped[str] = mapped_column(nullable=False)
@@ -45,9 +41,6 @@ class Task(Base):
 
 class CompletedTask(Base):
     __tablename__ = 'completed_tasks'
-    __tabel_args__ = (
-        UniqueConstraint('user_login'),
-    )
     id: Mapped[intpk]
     user_login: Mapped[int] = mapped_column(ForeignKey("users.user_login"))
     task_id: Mapped[str] = mapped_column(nullable=False)

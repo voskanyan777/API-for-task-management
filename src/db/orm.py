@@ -14,19 +14,19 @@ class SyncOrm():
         Base.metadata.create_all(sync_engine)
 
     @staticmethod
-    def select_tasks(user_name: str) -> list:
+    def select_tasks(user_login: str) -> list:
         with session_factory() as session:
-            query = select(User.user_name, Task.short_name, Task.description,
+            query = select(User.user_login, Task.short_name, Task.description,
                            Task.deadline).join(User,
-                                               User.id == Task.user_id).where(
-                Task.user_name == user_name)
+                                               User.user_login == Task.user_login).where(
+                Task.user_login == user_login)
             result = session.execute(query).all()
             print(type(result))
             # Создание списка словарей из результатов
             formatted_result = []
             for row in result:
                 formatted_result.append({
-                    'user_name': row[0],
+                    'user_login': row[0],
                     'short_name': row[1],
                     'description': row[2],
                     'deadline': row[3]

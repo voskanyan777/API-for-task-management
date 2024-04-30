@@ -16,9 +16,8 @@ syncOrm = SyncOrm()
 
 @app.on_event('startup')
 async def start_server():
-    # Base.metadata.drop_all(sync_engine)
-    # Base.metadata.create_all(sync_engine)
-    #
+    # syncOrm.drop_tables()
+    # syncOrm.create_tables()
     pass
 
 if __name__ == '__main__':
