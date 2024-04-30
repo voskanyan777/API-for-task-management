@@ -16,7 +16,7 @@ class SyncOrm():
     @staticmethod
     def select_tasks(user_login: str) -> list:
         with session_factory() as session:
-            query = select(User.user_login, Task.short_name, Task.description,
+            query = select(User.user_login, Task.task_id, Task.short_name, Task.description,
                            Task.deadline).join(User,
                                                User.user_login == Task.user_login).where(
                 Task.user_login == user_login)
@@ -74,10 +74,10 @@ class SyncOrm():
             session.commit()
 
     @staticmethod
-    def delete_task(user_id, task_id):
+    def delete_task(user_login: str, task_id: str):
         with session_factory() as session:
             session.query(Task).filter_by(task_id=task_id,
-                                          user_id=user_id).delete()
+                                          user_login=user_login).delete()
             session.commit()
 
     @staticmethod

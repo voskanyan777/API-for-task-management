@@ -52,9 +52,9 @@ async def update_task(task: TaskModel):
 
 
 
-@task_router.delete('/delete_task/{user_id}/{task_id}')
-async def delete_task(user_id: int, task_id: str):
-    syncOrm.delete_task(user_id, task_id)
+@task_router.delete('/delete_task/')
+async def delete_task(task_id: str, user: UserSchema = Depends(get_current_active_auth_user)):
+    syncOrm.delete_task(user.user_login, task_id)
     return {
         'data': None,
         'status': 'ok'
